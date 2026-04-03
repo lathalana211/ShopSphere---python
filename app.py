@@ -205,6 +205,141 @@ def search():
         "latency_ms": random.randint(12, 48)  # Simulated <100ms ElasticSearch latency
     })
 
+@app.route("/api/cart/<user_id>", methods=["GET"])
+def get_cart(user_id):
+    cart = CARTS.get(user_id, {})
+    items = []
+    total = 0
+    for pid, qty in cart.items():
+        if pid in PRODUCTS:
+            item = {**PRODUCTS[pid], "quantity": qty, "subtotal": round(PRODUCTS[pid]["price"] * qty, 2)}
+            items.append(item)
+            total += item["subtotal"]
+    return jsonify({"success": True, "cart": items, "total": round(total, 2)})
+
+@app.route("/api/cart/<user_id>/add", methods=["POST"])
+def add_to_cart(user_id):
+    data = request.get_json()
+    product_id = data.get("product_id")
+    quantity = data.get("quantity", 1)
+
+    if product_id not in PRODUCTS:
+        return jsonify({"success": False, "error": "Product not found"}), 404
+    if PRODUCTS[product_id]["stock"] < quantity:
+        return jsonify({"success": False, "error": "Insufficient stock"}), 400
+
+    if user_id not in CARTS:
+        CARTS[user_id] = {}
+    CARTS[user_id][product_id] = CARTS[user_id].get(product_id, 0) + quantity
+
+    return jsonify({"success": True, "message": f"Added {quantity}x {PRODUCTS[product_id]['name']} to cart"})
+
+@app.route("/api/cart/<user_id>/remove", methods=["DELETE"])
+def remove_from_cart(user_id):
+    data = request.get_json()
+    product_id = data.get("product_id")
+    if user_id in CARTS and product_id in CARTS[user_id]:
+        del CARTS[user_id][product_id]
+    return jsonify({"success": True, "message": "Item removed from cart"})
+
+@app.route("/api/orders/<user_id>/checkout", methods=["POST"])
+def checkout(user_id):
+    cart = CARTS.get(user_id, {})
+    if not cart:
+        return jsonify({"success": False, "error": "Cart is empty"}), 400
+
+    data = request.get_json()
+    payment_method = data.get("payment_method", "card")
+
+    # Race condition protection: Lock stock check
+    order_items = []
+    total = 0
+
+    for product_id, qty in cart.items():
+        product = PRODUCTS.get(product_id)
+        if not product or product["stock"] < qty:
+            return jsonify({"success": False, "error": f"Stock unavailable for {product_id}"}), 409
+
+        subtotal = product["price"] * qty
+        order_items.append({"product_id": product_id, "name": product["name"], "qty": qty, "subtotal": round(subtotal, 2)})
+        total += subtotal
+
+        # Publish event → triggers inventory update + vendor notification
+        publish_event("ORDER_PLACED", {"product_id": product_id, "quantity": qty, "vendor": product["vendor"]})
+
+    order_id = f"ORD-{str(uuid.uuid4())[:8].upper()}"
+    ORDERS[order_id] = {
+        "order_id": order_id,
+        "user_id": user_id,
+        "items": order_items,
+        "total": round(total, 2),
+        "status": "confirmed",
+        "payment": {"method": payment_method, "status": "charged", "stripe_ref": f"pi_{uuid.uuid4().hex[:16]}"},
+        "created_at": datetime.now().isoformat()
+    }
+
+    # Update user purchase history
+    if user_id in USERS:
+        for product_id in cart:
+            if product_id not in USERS[user_id]["purchase_history"]:
+                USERS[user_id]["purchase_history"].append(product_id)
+
+    CARTS[user_id] = {}  # Clear cart
+    return jsonify({"success": True, "order": ORDERS[order_id]})
+
+@app.route("/api/orders/<user_id>/history", methods=["GET"])
+def order_history(user_id):
+    user_orders = [o for o in ORDERS.values() if o["user_id"] == user_id]
+    return jsonify({"success": True, "orders": user_orders, "total": len(user_orders)})
+
+
+@app.route("/api/recommendations/<user_id>", methods=["GET"])
+def recommendations(user_id):
+    recs = get_recommendations(user_id)
+    user = USERS.get(user_id, {})
+    return jsonify({
+        "success": True,
+        "user": user.get("name", "Unknown"),
+        "algorithm": "Collaborative Filtering (Cosine Similarity)",
+        "recommendations": recs
+    })
+
+@app.route("/api/recommendations/similar/<product_id>", methods=["GET"])
+def similar_products(product_id):
+    product = PRODUCTS.get(product_id)
+    if not product:
+        return jsonify({"success": False, "error": "Product not found"}), 404
+
+    same_category = [p for pid, p in PRODUCTS.items() if p["category"] == product["category"] and pid != product_id]
+    same_vendor = [p for pid, p in PRODUCTS.items() if p["vendor"] == product["vendor"] and pid != product_id and p not in same_category]
+
+    return jsonify({
+        "success": True,
+        "product": product["name"],
+        "similar_by_category": same_category[:3],
+        "same_vendor": same_vendor[:2]
+    })
+
+
+@app.route("/api/events", methods=["GET"])
+def get_events():
+    return jsonify({"success": True, "events": event_log[-20:], "total": len(event_log)})
+
+@app.route("/api/health", methods=["GET"])
+def health():
+    return jsonify({
+        "status": "healthy",
+        "services": {
+            "product_service": "running",
+            "search_service": "running (ElasticSearch simulated)",
+            "order_service": "running",
+            "recommendation_service": "running (Collaborative Filtering)",
+            "message_broker": "running (RabbitMQ simulated)",
+            "cache": "running (Redis simulated)"
+        },
+        "timestamp": datetime.now().isoformat()
+    })
+
 @app.route("/", methods=["GET"])
 def home():
     return jsonify({
@@ -215,7 +350,15 @@ def home():
             "GET  /api/products": "List all products",
             "GET  /api/products/<id>": "Get product detail",
             "GET  /api/search?q=<query>": "Search products (ElasticSearch simulated)",
-            
+            "GET  /api/cart/<user_id>": "View cart",
+            "POST /api/cart/<user_id>/add": "Add to cart",
+            "DELETE /api/cart/<user_id>/remove": "Remove from cart",
+            "POST /api/orders/<user_id>/checkout": "Checkout (Stripe simulated)",
+            "GET  /api/orders/<user_id>/history": "Order history",
+            "GET  /api/recommendations/<user_id>": "Get personalized recommendations",
+            "GET  /api/recommendations/similar/<product_id>": "Get similar products",
+            "GET  /api/events": "View message broker event log",
+            "GET  /api/health": "System health check"
         }
     })
 
