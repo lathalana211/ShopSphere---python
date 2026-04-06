@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ShopSphere — Marketplace</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --navy:   #0A1628;
+      --teal:   #0D9488;
+      --tealLt: #14B8A6;
+      --mint:   #5EEAD4;
+      --white:  #FFFFFF;
+      --offwht: #F0FDFA;
+      --gray:   #64748B;
+      --grayLt: #E2E8F0;
+      --orange: #F97316;
+      --gold:   #FBBF24;
+      --dark:   #0F172A;
+      --card-bg:#FFFFFF;
+      --text:   #0A1628;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--offwht);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    nav {
+      background: var(--navy);
+      padding: 0 2rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+    }
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--white);
+      letter-spacing: -0.5px;
+    }
+    .logo span { color: var(--tealLt); }
+    .nav-links { display: flex; gap: 0.5rem; }
+    .nav-btn {
+      background: none;
+      border: none;
+      color: var(--gray);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.45rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .nav-btn:hover, .nav-btn.active { background: rgba(13,148,136,0.15); color: var(--tealLt); }
+    .cart-btn {
+      background: var(--teal);
+      color: var(--white);
+      border: none;
+      padding: 0.45rem 1.2rem;
+      border-radius: 6px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex; align-items: center; gap: 0.4rem;
+    }
+    .cart-btn:hover { background: var(--tealLt); }
+    .cart-count {
+      background: var(--orange);
+      color: #fff;
+      border-radius: 50%;
+      width: 18px; height: 18px;
+      font-size: 0.7rem;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700;
+    }
+
+    .page { display: none; }
+    .page.active { display: block; }
+
+    .hero {
+      background: var(--navy);
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; left: -80px;
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, rgba(13,148,136,0.18) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; right: -60px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(20,184,166,0.12) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(13,148,136,0.2);
+      color: var(--mint);
+      padding: 0.3rem 1rem;
+      border-radius: 20px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 1.2rem;
+      border: 1px solid rgba(13,148,136,0.3);
+    }
+    .hero h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 5rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.05;
+      margin-bottom: 1rem;
+    }
+    .hero h1 span { color: var(--tealLt); }
+    .hero p {
+      color: var(--gray);
+      font-size: 1.1rem;
+      max-width: 520px;
+      margin: 0 auto 2rem;
+      line-height: 1.6;
+    }
+    .hero-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .btn-primary {
+      background: var(--teal);
+      color: #fff;
+      border: none;
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-primary:hover { background: var(--tealLt); transform: translateY(-1px); }
+    .btn-outline {
+      background: transparent;
+      color: var(--white);
+      border: 1.5px solid rgba(255,255,255,0.25);
+      padding: 0.75rem 2rem;
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--tealLt); color: var(--tealLt); }
+
+    .stats-row {
+      display: flex;
+      justify-content: center;
+      gap: 3rem;
+      margin-top: 3rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255,255,255,0.08);
+      flex-wrap: wrap;
+    }
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--tealLt);
+    }
+    .stat-label { font-size: 0.82rem; color: var(--gray); margin-top: 0.2rem; }
+
+    .search-section {
+      background: var(--white);
+      padding: 1.5rem 2rem;
+      border-bottom: 1px solid var(--grayLt);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .search-wrap {
+      flex: 1;
+      min-width: 220px;
+      position: relative;
+    }
+    .search-wrap input {
+      width: 100%;
+      padding: 0.7rem 1rem 0.7rem 2.8rem;
+      border: 1.5px solid var(--grayLt);
+      border-radius: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border 0.2s;
+      color: var(--navy);
+    }
+    .search-wrap input:focus { border-color: var(--teal); }
+    .search-wrap .search-icon {
+      position: absolute;
+      left: 0.9rem; top: 50%;
+      transform: translateY(-50%);
+      color: var(--gray);
+      font-size: 1rem;
+    }</style>
+</head>
+<body>
+
+<!-- NAVBAR -->
+<nav>
+  <div class="logo">Shop<span>Sphere</span></div>
+  <div class="nav-links">
+    <button class="nav-btn active" onclick="showPage('home')">🏠 Home</button>
+    <button class="nav-btn" onclick="showPage('products')">📦 Products</button>
+    <button class="nav-btn" onclick="showPage('recommendations')">🤖 For You</button>
+    <button class="nav-btn" onclick="showPage('orders')">📋 Orders</button>
+  </div>
+  <button class="cart-btn" onclick="showPage('cart')">
+    🛒 Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- USER BAR -->
+<div class="user-bar">
+  <span class="user-label">👤 Shopping as:</span>
+  <button class="user-pill active" onclick="switchUser('U001', this)">Alice</button>
+  <button class="user-pill" onclick="switchUser('U002', this)">Bob</button>
+  <button class="user-pill" onclick="switchUser('U003', this)">Charlie</button>
+  <button class="user-pill" onclick="switchUser('U004', this)">Diana</button>
+</div>
+
+<!--HOME -->
+<div class="page active" id="page-home">
+  <div class="hero">
+    <div class="hero-tag">⚡ Q4 Python Elite — ShopSphere</div>
+    <h1>The Smarter Way<br>to <span>Shop Online</span></h1>
+    <p>A production-grade multi-vendor marketplace powered by AI recommendations, real-time inventory, and microservices architecture.</p>
+    <div class="hero-btns">
+      <button class="btn-primary" onclick="showPage('products')">Browse Products →</button>
+      <button class="btn-outline" onclick="showPage('recommendations')">🤖 Get Recommendations</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Products</div></div>
+      <div class="stat"><div class="stat-num">4</div><div class="stat-label">Vendors</div></div>
+      <div class="stat"><div class="stat-num">AI</div><div class="stat-label">Powered Recs</div></div>
+      <div class="stat"><div class="stat-num">&lt;100ms</div><div class="stat-label">Search Speed</div></div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="two-col">
+      <div>
+        <div class="section-title">🔥 Featured Products <span class="badge">Live</span></div>
+        <div class="products-grid" id="homeProducts">
+          <div class="loading"><div class="spinner"></div>Loading products...</div>
+        </div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div class="sidebar-title">🤖 Recommended For You</div>
+          <div class="recs-grid" id="homeRecs">
+            <div class="loading"><div class="spinner"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- PRODUCTS -->
+<div class="page" id="page-products">
+  <div class="search-section">
+    <div class="search-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search products... (e.g. apple, laptop, sony)" onkeydown="if(event.key==='Enter') doSearch()"/>
+    </div>
+    <select class="filter-select" id="sortSelect">
+      <option value="relevance">Sort: Relevance</option>
+      <option value="price_asc">Price: Low → High</option>
+      <option value="price_desc">Price: High → Low</option>
+    </select>
+    <button class="search-btn" onclick="doSearch()">Search</button>
+  </div>
+  <div class="container">
+    <div class="section-title" id="productsTitle">📦 All Products <span class="badge" id="productCount">...</span></div>
+    <div class="products-grid" id="productsGrid">
+      <div class="loading"><div class="spinner"></div>Loading...</div>
+    </div>
+  </div>
+</div>
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  const API = 'http://127.0.0.1:5000';
+  let currentUser = 'U001';
+  let cartData = [];
+
+  const PRODUCT_ICONS = {
+    'Electronics': '📱', 'Laptops': '💻', 'Audio': '🎧',
+    'Tablets': '📱', 'Accessories': '🖱️', 'Monitors': '🖥️'
+  };
+
+  function showPage(name) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('page-' + name).classList.add('active');
+    if (name === 'home') { loadHome(); }
+    if (name === 'products') 
+    if (name === 'cart') { loadCart(); }
+  }
+
+  function switchUser(userId, el) {
+    currentUser = userId;
+    document.querySelectorAll('.user-pill').forEach(p => p.classList.remove('active'));
+    el.classList.add('active');
+    showToast('👤 Switched to ' + el.textContent);
+    const activePage = document.querySelector('.page.active').id.replace('page-', '');
+    showPage(activePage);
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+  }
+
+  async function apiFetch(path, options = {}) {
+    try {
+      const res = await fetch(API + path, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options
+      });
+      return await res.json();
+    } catch (e) {
+      return { success: false, error: 'Cannot connect to server. Make sure app.py is running!' };
+    }
+  }
+
+  const VENDOR_NAMES = {
+    'V001': 'Apple Store', 'V002': 'Samsung Hub',
+    'V003': 'Dell Official', 'V004': 'Logitech World'
+  };
+
+  function productCard(p, showAddBtn = true) {
+    const icon = PRODUCT_ICONS[p.category] || '📦';
+    const stockClass = p.stock > 20 ? 'stock-ok' : 'stock-low';
+    const stockText = p.stock > 20 ? `${p.stock} in stock` : `Only ${p.stock} left!`;
+    return `
+      <div class="product-card">
+        <div class="product-img">
+          ${icon}
+          <span class="product-category-badge">${p.category}</span>
+        </div>
+        <div class="product-body">
+          <div class="product-name">${p.name}</div>
+          <div class="product-vendor">by ${VENDOR_NAMES[p.vendor] || p.vendor}</div>
+          <div class="product-footer">
+            <div class="product-price">$${p.price.toFixed(2)}</div>
+            <span class="stock-badge ${stockClass}">${stockText}</span>
+          </div>
+          ${showAddBtn ? `<button class="add-btn" onclick='addToCart("${p.id}", "${p.name}")'>+ Add to Cart</button>` : ''}
+        </div>
+      </div>`;
+  }
+
+  async function loadHome() {
+    const [pData, rData] = await Promise.all([
+      apiFetch('/api/products'),
+      apiFetch('/api/recommendations/' + currentUser)
+    ]);
+
+    const hp = document.getElementById('homeProducts');
+    if (pData.success) {
+      hp.innerHTML = pData.products.slice(0, 6).map(p => productCard(p)).join('');
+    } else {
+      hp.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div>${pData.error}</div>`;
+    }
+
+    const hr = document.getElementById('homeRecs');
+    if (rData.success && rData.recommendations.length > 0) {
+      hr.innerHTML = rData.recommendations.map(r => `
+        <div class="rec-card">
+          <div class="rec-icon">${PRODUCT_ICONS[r.category] || '📦'}</div>
+          <div class="rec-info">
+            <div class="rec-name">${r.name}</div>
+            <div class="rec-score">⭐ Score: ${r.recommendation_score}</div>
+          </div>
+          <div class="rec-price">$${r.price.toFixed(2)}</div>
+        </div>`).join('');
+    } else {
+      hr.innerHTML = '<div class="empty"><div class="empty-icon">🤖</div>No recommendations yet.</div>';
+    }
+  }
+
+  async function loadAllProducts() {
+    const grid    = document.getElementById('productsGrid');
+    const titleEl = document.getElementById('productsTitle');
+    if (!grid) return;
+    grid.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+    const data = await apiFetch('/api/products');
+    if (data.success) {
+      if (titleEl) titleEl.innerHTML = '📦 All Products <span class="badge">' + data.total + ' items</span>';
+      grid.innerHTML = data.products.map(p => productCard(p)).join('');
+    } else {
+      grid.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div>' + (data.error || 'Could not load products.') + '</div>';
+    }
+  }
+
+  async function doSearch() {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-products').classList.add('active');
+
+    await new Promise(r => setTimeout(r, 30));
+
+    const inputEl = document.getElementById('searchInput');
+    const sortEl  = document.getElementById('sortSelect');
+    const grid    = document.getElementById('productsGrid');
+    const titleEl = document.getElementById('productsTitle');
+
+    const q    = inputEl ? inputEl.value.trim() : '';
+    const sort = sortEl  ? sortEl.value         : 'relevance';
+
+    if (!grid) return;
+    grid.innerHTML = '<div class="loading"><div class="spinner"></div>Searching...</div>';
+
+    const data = await apiFetch('/api/search?q=' + encodeURIComponent(q) + '&sort_by=' + sort);
+
+    if (data.success) {
+      if (titleEl) {
+        titleEl.innerHTML = '🔍 Results for "' + (q || 'all') + '" <span class="badge">' + data.total + ' found — ' + data.latency_ms + 'ms</span>';
+      }
+      if (data.results.length === 0) {
+        grid.innerHTML = '<div class="empty"><div class="empty-icon">🔍</div>No products found. Try a different keyword.</div>';
+      } else {
+        grid.innerHTML = data.results.map(p => productCard(p)).join('');
+      }
+    } else {
+      grid.innerHTML = '<div class="empty"><div class="empty-icon">⚠️</div>' + (data.error || 'Search failed. Make sure app.py is running!') + '</div>';
+    }
+  }
+
+  async function addToCart(productId, name) {
+    const data = await apiFetch(`/api/cart/${currentUser}/add`, {
+      method: 'POST',
+      body: JSON.stringify({ product_id: productId, quantity: 1 })
+    });
+    if (data.success) {
+      showToast('✅ ' + data.message);
+     
+    } else {
+      showToast('❌ ' + data.error);
+    }
+  }
+
+  async function loadCart() {
+    const container = document.getElementById('cartItems');
+    const summary = document.getElementById('cartSummary');
+    container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading cart...</div>';
+    const data = await apiFetch(`/api/cart/${currentUser}`);
+    if (data.success) {
+      if (data.cart.length === 0) {
+        container.innerHTML = '<div class="empty"><div class="empty-icon">🛒</div>Your cart is empty.<br><br><button class="btn-primary" onclick="showPage(\'products\')">Browse Products</button></div>';
+        summary.style.display = 'none';
+      } else {
+        container.innerHTML = data.cart.map(item => `
+          <div class="cart-item">
+            <div class="cart-item-icon">${PRODUCT_ICONS[item.category] || '📦'}</div>
+            <div class="cart-item-info">
+              <div class="cart-item-name">${item.name}</div>
+              <div class="cart-item-price">$${item.price.toFixed(2)} × ${item.quantity}</div>
+            </div>
+            <div class="cart-item-total">$${item.subtotal.toFixed(2)}</div>
+            <button class="remove-btn" >Remove</button>
+          </div>`).join('');
+        summary.style.display = 'block';
+        document.getElementById('cartTotal').textContent = '$' + data.total.toFixed(2);
+      }
+    }
+  }
+  loadHome();
+</script>
+</body>
+</html>
