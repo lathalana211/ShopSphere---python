@@ -342,25 +342,26 @@ def health():
 
 @app.route("/", methods=["GET"])
 def home():
-    return jsonify({
-        "app": "ShopSphere API",
-        "version": "1.0.0",
-        "brand": "ShopSphere - Scalable Marketplace",
-        "endpoints": {
-            "GET  /api/products": "List all products",
-            "GET  /api/products/<id>": "Get product detail",
-            "GET  /api/search?q=<query>": "Search products (ElasticSearch simulated)",
-            "GET  /api/cart/<user_id>": "View cart",
-            "POST /api/cart/<user_id>/add": "Add to cart",
-            "DELETE /api/cart/<user_id>/remove": "Remove from cart",
-            "POST /api/orders/<user_id>/checkout": "Checkout (Stripe simulated)",
-            "GET  /api/orders/<user_id>/history": "Order history",
-            "GET  /api/recommendations/<user_id>": "Get personalized recommendations",
-            "GET  /api/recommendations/similar/<product_id>": "Get similar products",
-            "GET  /api/events": "View message broker event log",
-            "GET  /api/health": "System health check"
-        }
-    })
+     return render_template("index.html")
+    # return jsonify({
+    #     "app": "ShopSphere API",
+    #     "version": "1.0.0",
+    #     "brand": "ShopSphere - Scalable Marketplace",
+    #     "endpoints": {
+    #         "GET  /api/products": "List all products",
+    #         "GET  /api/products/<id>": "Get product detail",
+    #         "GET  /api/search?q=<query>": "Search products (ElasticSearch simulated)",
+    #         "GET  /api/cart/<user_id>": "View cart",
+    #         "POST /api/cart/<user_id>/add": "Add to cart",
+    #         "DELETE /api/cart/<user_id>/remove": "Remove from cart",
+    #         "POST /api/orders/<user_id>/checkout": "Checkout (Stripe simulated)",
+    #         "GET  /api/orders/<user_id>/history": "Order history",
+    #         "GET  /api/recommendations/<user_id>": "Get personalized recommendations",
+    #         "GET  /api/recommendations/similar/<product_id>": "Get similar products",
+    #         "GET  /api/events": "View message broker event log",
+    #         "GET  /api/health": "System health check"
+    #     }
+    # })
 
 if __name__ == "__main__":
     print("=" * 60)
