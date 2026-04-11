@@ -305,6 +305,35 @@
     </div>
   </div>
 </div>
+
+
+<!-- RECOMMENDATIONS -->
+<div class="page" id="page-recommendations">
+  <div class="container">
+    <div class="section-title">🤖 AI Recommendations <span class="badge">Collaborative Filtering</span></div>
+    <div class="two-col">
+      <div>
+        <p style="color:var(--gray);margin-bottom:1.5rem;font-size:0.9rem;">Based on what similar users have purchased — powered by cosine similarity algorithm.</p>
+        <div id="recsContainer"><div class="loading"><div class="spinner"></div>Loading recommendations...</div></div>
+      </div>
+      <div>
+        <div class="sidebar-card">
+          <div class="sidebar-title">⚙️ How It Works</div>
+          <div style="font-size:0.85rem;color:var(--gray);line-height:1.7;">
+            <p>1️⃣ <b>Build Matrix</b> — map users to products purchased</p><br>
+            <p>2️⃣ <b>Cosine Similarity</b> — find users with similar taste</p><br>
+            <p>3️⃣ <b>Find New Items</b> — items they bought, you haven't</p><br>
+            <p>4️⃣ <b>Rank & Return</b> — weighted by similarity score</p><br>
+            <div style="background:var(--offwht);padding:0.8rem;border-radius:8px;font-family:monospace;font-size:0.78rem;color:var(--teal);margin-top:0.5rem;">
+              sim(A,B) = |A∩B| / √(|A|×|B|)
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
