@@ -334,6 +334,35 @@
   </div>
 </div>
 
+
+<!--  CART-->
+<div class="page" id="page-cart">
+  <div class="container">
+    <div class="section-title">🛒 Your Cart</div>
+    <div class="two-col">
+      <div id="cartItems"><div class="loading"><div class="spinner"></div>Loading cart...</div></div>
+      <div>
+        <div class="cart-summary" id="cartSummary" style="display:none">
+          <div class="sidebar-title">Order Summary</div>
+          <div class="cart-total-row">
+            <span class="cart-total-label">Total</span>
+            <span class="cart-total-amount" id="cartTotal">$0.00</span>
+          </div>
+          <button class="checkout-btn" onclick="openCheckoutModal()">💳 Checkout Now</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ORDERS -->
+<div class="page" id="page-orders">
+  <div class="container">
+    <div class="section-title">📋 Order History</div>
+    <div id="ordersContainer"><div class="loading"><div class="spinner"></div>Loading orders...</div></div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
