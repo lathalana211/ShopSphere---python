@@ -363,6 +363,18 @@
   </div>
 </div>
 
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutModal">
+  <div class="modal">
+    <h3>💳 Confirm Purchase</h3>
+    <p>Your order will be placed and inventory will be updated automatically via the event system.</p>
+    <div id="modalCartTotal" style="font-family:'Syne',sans-serif;font-size:1.4rem;font-weight:800;color:var(--teal);margin-bottom:1.5rem;"></div>
+    <div class="modal-btns">
+      <button class="modal-cancel" onclick="closeCheckoutModal()">Cancel</button>
+      <button class="modal-confirm" onclick="doCheckout()">✅ Place Order</button>
+    </div>
+  </div>
+</div>
 <!-- TOAST -->
 <div class="toast" id="toast"></div>
 
