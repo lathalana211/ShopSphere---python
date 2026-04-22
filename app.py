@@ -268,15 +268,7 @@ def checkout(user_id):
         publish_event("ORDER_PLACED", {"product_id": product_id, "quantity": qty, "vendor": product["vendor"]})
 
     order_id = f"ORD-{str(uuid.uuid4())[:8].upper()}"
-    ORDERS[order_id] = {
-        "order_id": order_id,
-        "user_id": user_id,
-        "items": order_items,
-        "total": round(total, 2),
-        "status": "confirmed",
-        "payment": {"method": payment_method, "status": "charged", "stripe_ref": f"pi_{uuid.uuid4().hex[:16]}"},
-        "created_at": datetime.now().isoformat()
-    }
+   
 
     # Update user purchase history
     if user_id in USERS:
