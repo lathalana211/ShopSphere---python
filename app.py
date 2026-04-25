@@ -10,7 +10,7 @@ import random
 app = Flask(__name__, template_folder='templates')
 app.secret_key = "shopsphere-secret-2024"
 CORS(app)  # Allow frontend to talk to API
-===========================================================
+
 
 PRODUCTS = {
     "P001": {"id": "P001", "name": "iPhone 15 Pro", "category": "Electronics", "price": 999.99, "stock": 50, "vendor": "V001", "tags": ["phone", "apple", "mobile"]},
@@ -35,7 +35,6 @@ VENDORS = {
     "V005": {"id": "V005", "name": "Microsoft Store", "rating": 4.4},
 }
 
-
 USERS = {
     "U001": {"id": "U001", "name": "Alice", "email": "alice@email.com", "purchase_history": ["P001", "P006", "P007"]},
     "U002": {"id": "U002", "name": "Bob", "email": "bob@email.com", "purchase_history": ["P003", "P008", "P010"]},
@@ -49,7 +48,6 @@ CARTS = {}
 
 event_queue = queue.Queue()
 event_log = []
-
 
 def event_worker():
     """Background worker simulating RabbitMQ message consumer"""

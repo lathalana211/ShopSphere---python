@@ -31,6 +31,7 @@
       min-height: 100vh;
     }
 
+    /* ── NAVBAR ── */
     nav {
       background: var(--navy);
       padding: 0 2rem;
@@ -87,9 +88,11 @@
       font-weight: 700;
     }
 
+    /* ── PAGES ── */
     .page { display: none; }
     .page.active { display: block; }
 
+    /* ── HERO ── */
     .hero {
       background: var(--navy);
       padding: 5rem 2rem 4rem;
@@ -169,6 +172,7 @@
     }
     .btn-outline:hover { border-color: var(--tealLt); color: var(--tealLt); }
 
+    /* Stats row */
     .stats-row {
       display: flex;
       justify-content: center;
@@ -187,6 +191,7 @@
     }
     .stat-label { font-size: 0.82rem; color: var(--gray); margin-top: 0.2rem; }
 
+    /* ── SEARCH BAR ── */
     .search-section {
       background: var(--white);
       padding: 1.5rem 2rem;
@@ -246,6 +251,7 @@
     }
     .search-btn:hover { background: var(--tealLt); }
 
+    /* ── MAIN CONTENT ── */
     .container { max-width: 1200px; margin: 0 auto; padding: 2rem; }
 
     .section-title {
@@ -268,7 +274,8 @@
       font-weight: 500;
     }
 
-\    .products-grid {
+    /* ── PRODUCT GRID ── */
+    .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
       gap: 1.2rem;
@@ -342,6 +349,7 @@
     }
     .add-btn:hover { background: var(--teal); }
 
+    /* ── RECOMMENDATIONS ── */
     .rec-card {
       background: var(--card-bg);
       border-radius: 12px;
@@ -368,6 +376,7 @@
     .rec-price { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--teal); font-size: 1rem; }
     .recs-grid { display: flex; flex-direction: column; gap: 0.8rem; }
 
+    /* ── CART ── */
     .cart-item {
       background: var(--white);
       border-radius: 10px;
@@ -433,6 +442,8 @@
       transition: background 0.2s;
     }
     .checkout-btn:hover { background: var(--tealLt); }
+
+    /* ── ORDERS ── */
     .order-card {
       background: var(--white);
       border-radius: 12px;
@@ -449,6 +460,7 @@
     .order-date { font-size: 0.78rem; color: var(--gray); }
     .order-total { font-family: 'Syne', sans-serif; font-weight: 700; color: var(--teal); }
 
+    /* ── LOADING / EMPTY ── */
     .loading {
       text-align: center;
       padding: 3rem;
@@ -471,6 +483,7 @@
     }
     .empty-icon { font-size: 3rem; margin-bottom: 0.8rem; }
 
+    /* ── TOAST ── */
     .toast {
       position: fixed;
       bottom: 1.5rem; right: 1.5rem;
@@ -489,6 +502,7 @@
     }
     .toast.show { transform: translateY(0); opacity: 1; }
 
+    /* ── USER SWITCHER ── */
     .user-bar {
       background: var(--white);
       padding: 0.6rem 2rem;
@@ -511,6 +525,7 @@
     }
     .user-pill.active { background: var(--teal); color: #fff; border-color: var(--teal); }
 
+    /* ── MODAL ── */
     .modal-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.5);
@@ -533,6 +548,7 @@
     .modal-confirm { flex: 1; background: var(--teal); color: #fff; border: none; padding: 0.75rem; border-radius: 8px; font-family: 'Syne', sans-serif; font-weight: 700; cursor: pointer; }
     .modal-cancel { flex: 1; background: var(--grayLt); color: var(--navy); border: none; padding: 0.75rem; border-radius: 8px; font-family: 'DM Sans', sans-serif; cursor: pointer; }
 
+    /* ── LAYOUT HELPERS ── */
     .two-col { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; align-items: start; }
     @media (max-width: 800px) { .two-col { grid-template-columns: 1fr; } }
     .sidebar-card { background: var(--white); border-radius: 12px; padding: 1.5rem; border: 1px solid var(--grayLt); }
@@ -540,6 +556,8 @@
   </style>
 </head>
 <body>
+
+<!-- NAVBAR -->
 <nav>
   <div class="logo">Shop<span>Sphere</span></div>
   <div class="nav-links">
@@ -562,7 +580,7 @@
   <button class="user-pill" onclick="switchUser('U004', this)">Diana</button>
 </div>
 
-<!--HOME -->
+<!-- ══ PAGE: HOME ══ -->
 <div class="page active" id="page-home">
   <div class="hero">
     <div class="hero-tag">⚡ Q4 Python Elite — ShopSphere</div>
@@ -600,6 +618,7 @@
   </div>
 </div>
 
+<!-- ══ PAGE: PRODUCTS ══ -->
 <div class="page" id="page-products">
   <div class="search-section">
     <div class="search-wrap">
@@ -622,6 +641,7 @@
   </div>
 </div>
 
+<!-- ══ PAGE: RECOMMENDATIONS ══ -->
 <div class="page" id="page-recommendations">
   <div class="container">
     <div class="section-title">🤖 AI Recommendations <span class="badge">Collaborative Filtering</span></div>
@@ -648,6 +668,7 @@
   </div>
 </div>
 
+<!-- ══ PAGE: CART ══ -->
 <div class="page" id="page-cart">
   <div class="container">
     <div class="section-title">🛒 Your Cart</div>
@@ -667,12 +688,15 @@
   </div>
 </div>
 
+<!-- ══ PAGE: ORDERS ══ -->
 <div class="page" id="page-orders">
   <div class="container">
     <div class="section-title">📋 Order History</div>
     <div id="ordersContainer"><div class="loading"><div class="spinner"></div>Loading orders...</div></div>
   </div>
 </div>
+
+<!-- CHECKOUT MODAL -->
 <div class="modal-overlay" id="checkoutModal">
   <div class="modal">
     <h3>💳 Confirm Purchase</h3>
@@ -685,7 +709,7 @@
   </div>
 </div>
 
-
+<!-- TOAST -->
 <div class="toast" id="toast"></div>
 
 <script>
@@ -698,6 +722,7 @@
     'Tablets': '📱', 'Accessories': '🖱️', 'Monitors': '🖥️'
   };
 
+  // ── NAVIGATION ──
   function showPage(name) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -719,6 +744,7 @@
     showPage(activePage);
   }
 
+  // ── TOAST ──
   function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -726,6 +752,7 @@
     setTimeout(() => t.classList.remove('show'), 3000);
   }
 
+  // ── API HELPERS ──
   async function apiFetch(path, options = {}) {
     try {
       const res = await fetch(API + path, {
@@ -743,6 +770,7 @@
     'V003': 'Dell Official', 'V004': 'Logitech World'
   };
 
+  // ── PRODUCT CARD ──
   function productCard(p, showAddBtn = true) {
     const icon = PRODUCT_ICONS[p.category] || '📦';
     const stockClass = p.stock > 20 ? 'stock-ok' : 'stock-low';
@@ -765,12 +793,14 @@
       </div>`;
   }
 
+  // ── HOME ──
   async function loadHome() {
     const [pData, rData] = await Promise.all([
       apiFetch('/api/products'),
       apiFetch('/api/recommendations/' + currentUser)
     ]);
 
+    // Featured products (first 6)
     const hp = document.getElementById('homeProducts');
     if (pData.success) {
       hp.innerHTML = pData.products.slice(0, 6).map(p => productCard(p)).join('');
@@ -778,6 +808,7 @@
       hp.innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div>${pData.error}</div>`;
     }
 
+    // Recommendations sidebar
     const hr = document.getElementById('homeRecs');
     if (rData.success && rData.recommendations.length > 0) {
       hr.innerHTML = rData.recommendations.map(r => `
@@ -795,6 +826,7 @@
     updateCartCount();
   }
 
+  // ── PRODUCTS ──
   async function loadAllProducts() {
     const grid    = document.getElementById('productsGrid');
     const titleEl = document.getElementById('productsTitle');
@@ -810,6 +842,7 @@
   }
 
   async function doSearch() {
+    // Always navigate to products page first so elements exist in DOM
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.getElementById('page-products').classList.add('active');
 
@@ -842,6 +875,7 @@
     }
   }
 
+  // ── CART ──
   async function addToCart(productId, name) {
     const data = await apiFetch(`/api/cart/${currentUser}/add`, {
       method: 'POST',
@@ -922,6 +956,7 @@
     }
   }
 
+  // ── RECOMMENDATIONS ──
   async function loadRecommendations() {
     const container = document.getElementById('recsContainer');
     container.innerHTML = '<div class="loading"><div class="spinner"></div>Calculating recommendations...</div>';
@@ -948,6 +983,7 @@
     }
   }
 
+  // ── ORDERS ──
   async function loadOrders() {
     const container = document.getElementById('ordersContainer');
     container.innerHTML = '<div class="loading"><div class="spinner"></div>Loading orders...</div>';
@@ -974,6 +1010,7 @@
     }
   }
 
+  // ── INIT ──
   loadHome();
   updateCartCount();
 </script>
