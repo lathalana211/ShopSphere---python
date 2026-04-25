@@ -23,7 +23,9 @@ PRODUCTS = {
     "P008": {"id": "P008", "name": "Logitech MX Master 3", "category": "Accessories", "price": 99.99, "stock": 120, "vendor": "V004", "tags": ["mouse", "logitech", "wireless"]},
     "P009": {"id": "P009", "name": "Samsung 4K Monitor", "category": "Monitors", "price": 599.99, "stock": 30, "vendor": "V002", "tags": ["monitor", "samsung", "4k"]},
     "P010": {"id": "P010", "name": "Mechanical Keyboard", "category": "Accessories", "price": 129.99, "stock": 90, "vendor": "V004", "tags": ["keyboard", "mechanical", "gaming"]},
+    "P011": {"id": "P011", "name": "Standard Keyboard", "category": "Accessories", "price": 129.99, "stock": 90, "vendor": "V004", "tags": ["keyboard", "mechanical", "gaming"]},
 }
+
 
 VENDORS = {
     "V001": {"id": "V001", "name": "Apple Store", "rating": 4.8},
@@ -31,6 +33,7 @@ VENDORS = {
     "V003": {"id": "V003", "name": "Dell Official", "rating": 4.3},
     "V004": {"id": "V004", "name": "Logitech World", "rating": 4.6},
 }
+
 
 USERS = {
     "U001": {"id": "U001", "name": "Alice", "email": "alice@email.com", "purchase_history": ["P001", "P006", "P007"]},
@@ -42,8 +45,10 @@ USERS = {
 ORDERS = {}
 CARTS = {}
 
+
 event_queue = queue.Queue()
 event_log = []
+
 
 def event_worker():
     """Background worker simulating RabbitMQ message consumer"""
@@ -268,7 +273,15 @@ def checkout(user_id):
         publish_event("ORDER_PLACED", {"product_id": product_id, "quantity": qty, "vendor": product["vendor"]})
 
     order_id = f"ORD-{str(uuid.uuid4())[:8].upper()}"
-   
+    ORDERS[order_id] = {
+        "order_id": order_id,
+        "user_id": user_id,
+        "items": order_items,
+        "total": round(total, 2),
+        "status": "confirmed",
+        "payment": {"method": payment_method, "status": "charged", "stripe_ref": f"pi_{uuid.uuid4().hex[:16]}"},
+        "created_at": datetime.now().isoformat()
+    }
 
     # Update user purchase history
     if user_id in USERS:
