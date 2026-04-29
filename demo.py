@@ -46,7 +46,6 @@ show(requests.get(f"{BASE_URL}/api/recommendations/U001"))
 # 8. Event Log
 print_section("8. Message Broker Event Log (RabbitMQ Simulated)")
 show(requests.get(f"{BASE_URL}/api/events"))
-
 print_section("Demo Complete!")
 print("All 4 microservices working:")
 print("  Service A - Auth/User: Users & Sessions")

@@ -32,6 +32,7 @@ VENDORS = {
     "V002": {"id": "V002", "name": "Samsung Hub", "rating": 4.5},
     "V003": {"id": "V003", "name": "Dell Official", "rating": 4.3},
     "V004": {"id": "V004", "name": "Logitech World", "rating": 4.6},
+    "V005": {"id": "V005", "name": "Microsoft Store", "rating": 4.4},
 }
 
 
